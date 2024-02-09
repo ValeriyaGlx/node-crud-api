@@ -1,10 +1,10 @@
 {
   "compilerOptions": {
     "target": "ES5",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "CommonJS",
+    "moduleResolution": "node",
     "rootDir": "./src",
-    "lib": ["ESNext"],
+    "lib": ["ES5"],
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
@@ -14,8 +14,8 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitAny": true,
-    "skipLibCheck": true,
+    "skipLibCheck": true
   },
   "include": ["src", ".eslintrc"],
-  //"exclude": ["node_modules", "coverage"],
+  "exclude": ["node_modules", "coverage"]
 }

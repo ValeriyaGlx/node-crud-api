@@ -3,7 +3,7 @@ import webpack from 'webpack';
 
 import 'webpack-dev-server';
 
-const config: webpack.Configuration =  {
+const config: webpack.Configuration = {
   mode: 'production',
   entry: './src/index.ts',
   target: 'node',
