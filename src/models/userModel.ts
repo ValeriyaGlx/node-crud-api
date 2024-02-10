@@ -27,19 +27,19 @@ const create = (user: NewUserType) => {
   });
 };
 
-export { findAllUsers, findUserById, create };
+const deleteUser = (user: UserType) => {
+  const index = usersData.findIndex((usr) => usr.id === user.id);
+  if (index !== -1) {
+    usersData.splice(index, 1);
+  }
+  //TODO вывести пустой массив
+  return new Promise((resolve) => resolve(usersData));
+};
 
-//   update(newUser: Partial<User>): void {
-//     if (newUser.username && typeof newUser.username === 'string') {
-//       this.username = newUser.username;
-//     }
-//     if (newUser.age && typeof newUser.username === 'number') {
-//       this.age = newUser.age;
-//     }
-//     if (
-//       newUser.hobbies &&
-//       Array.isArray(newUser.hobbies) &&
-//       newUser.hobbies.every((item) => typeof item === 'string')
-//     ) {
-//       this.hobbies = newUser.hobbies;
-//     }
+const update = (user: UserType) => {
+  const index = usersData.findIndex((usr) => usr.id === user.id);
+  usersData[index] = user;
+  return new Promise((resolve) => resolve(usersData[index]));
+};
+
+export { findAllUsers, findUserById, create, deleteUser, update };
