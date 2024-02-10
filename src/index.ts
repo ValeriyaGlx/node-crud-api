@@ -1,32 +1,41 @@
 import 'dotenv/config';
 import { createServer } from 'http';
 
-import * as UserController from './controllers/userController';
 import { MethodsEnum } from './types/enums';
-import { parseUrlPath } from './utils';
+import { getRoutes, postRoutes } from './routes';
 
 const PORT = Number(process.env.PORT) || 4000;
 
 const server = createServer(async (req, res) => {
-  const parsedPath = parseUrlPath(req);
+  try {
+    switch (req.method) {
+      case MethodsEnum.GET:
+        const get = async () => {
+          const { status, data } = await getRoutes(req.url ?? '');
+          res.writeHead(status, { 'Content-Type': 'application/json' });
+          res.end(data);
+        };
+        get();
+        break;
 
-  // TODO: /api/usersjfjfj bug
-  if (req.url?.startsWith('/api/users')) {
-    switch (parsedPath?.length) {
-      case 2:
-        if (req.method === MethodsEnum.GET) UserController.getAllProducts(req, res);
-        if (req.method === MethodsEnum.POST) UserController.createUser(req, res);
+      case MethodsEnum.POST:
+        const post = async () => {
+          await postRoutes(req.url ?? '', req, res);
+        };
+        post();
         break;
-      case 3:
-        if (req.method === MethodsEnum.GET) UserController.getProductById(req, res, parsedPath.pop() ?? '');
+
+      case MethodsEnum.PUT:
         break;
+
+      case MethodsEnum.DELETE:
+        break;
+
       default:
-        res.end(JSON.stringify({ message: 'This route not found' }));
+        res.end(JSON.stringify({ message: 'This operation not found' }));
         break;
     }
-  } else {
-    res.end(JSON.stringify({ message: 'This route not found' }));
-  }
+  } catch (err) {}
 });
 
 server.listen(PORT, () => {

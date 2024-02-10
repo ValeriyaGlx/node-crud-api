@@ -1,3 +1,1 @@
-import { IncomingMessage } from 'http';
-
-export const parseUrlPath = (req: IncomingMessage) => req.url?.split('/').filter((el) => el);
+export const parseUrlPath = (url: string) => (url.endsWith('/') ? url : `${url}/`);
