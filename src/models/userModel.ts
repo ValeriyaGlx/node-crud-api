@@ -1,16 +1,11 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import { usersData } from '../data/data';
-
-type UserType = {
-  id: string;
-  username: string;
-  age: number;
-  hobbies: string[] | [];
-};
-
-export type UsersDataType = UserType[] | [];
+import { writeDataToFile } from '../utils';
+import { NewUserType, UserType } from '../types';
 
 const findAllUsers = () => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     resolve(usersData);
   });
 };
@@ -22,7 +17,18 @@ const findUserById = (id: string) => {
   });
 };
 
-export { findAllUsers, findUserById };
+const create = (user: NewUserType) => {
+  return new Promise((resolve, reject) => {
+    const newUser: UserType = {
+      id: uuidv4(),
+      ...user,
+    };
+    usersData.push(newUser);
+    writeDataToFile('../data/data.ts', usersData);
+  });
+};
+
+export { findAllUsers, findUserById, create };
 
 //   update(newUser: Partial<User>): void {
 //     if (newUser.username && typeof newUser.username === 'string') {
