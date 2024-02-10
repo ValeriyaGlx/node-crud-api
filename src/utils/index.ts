@@ -1,2 +1,3 @@
 export * from './parseUrlPath';
-export * from './writeDataToFile';
+export * from './checkUserRequiredFields';
+export * from './checkUserTypes';

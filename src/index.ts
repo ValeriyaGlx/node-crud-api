@@ -10,8 +10,6 @@ const PORT = Number(process.env.PORT) || 4000;
 const server = createServer(async (req, res) => {
   const parsedPath = parseUrlPath(req);
 
-  console.log(parsedPath);
-
   // TODO: /api/usersjfjfj bug
   if (req.url?.startsWith('/api/users')) {
     switch (parsedPath?.length) {

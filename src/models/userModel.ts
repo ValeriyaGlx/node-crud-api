@@ -1,7 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 
 import { usersData } from '../data/data';
-import { writeDataToFile } from '../utils';
 import { NewUserType, UserType } from '../types';
 
 const findAllUsers = () => {
@@ -18,13 +17,13 @@ const findUserById = (id: string) => {
 };
 
 const create = (user: NewUserType) => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const newUser: UserType = {
       id: uuidv4(),
       ...user,
     };
     usersData.push(newUser);
-    writeDataToFile('../data/data.ts', usersData);
+    resolve(newUser);
   });
 };
 

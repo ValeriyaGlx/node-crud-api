@@ -1,6 +1,8 @@
 import { IncomingMessage, ServerResponse } from 'http';
 import * as UserModel from '../models/userModel';
 import { StatusCodeEnum } from '../types/enums';
+import { checkUserRequiredFields } from '../utils/checkUserRequiredFields';
+import { checkUserTypes } from '../utils';
 
 const getAllProducts = async (req: IncomingMessage, res: ServerResponse) => {
   try {
@@ -29,17 +31,44 @@ const getProductById = async (req: IncomingMessage, res: ServerResponse, id: str
 // @route POST /api/users
 const createUser = async (req: IncomingMessage, res: ServerResponse) => {
   try {
-    const user = {
-      username: 'Svyat',
-      age: 27,
-      hobbies: [],
-    };
+    let body = '';
 
-    const newUser = UserModel.create(user);
-    res.writeHead(StatusCodeEnum.CREATED, { 'Content-Type': 'application/json' });
-    res.end(JSON.stringify(newUser));
+    req.on('data', (chunk) => {
+      body += chunk.toString();
+    });
+
+    req.on('end', async () => {
+      const { username, age, hobbies } = JSON.parse(body);
+
+      const user = {
+        username,
+        age,
+        hobbies,
+      };
+
+      const requiredFields = checkUserRequiredFields(user);
+
+      if (requiredFields) {
+        res.writeHead(StatusCodeEnum.BAD_REQUEST, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: `Missing required fields: ${requiredFields}` }));
+        return;
+      }
+
+      const wrongUsreTypes = checkUserTypes(user);
+      if (wrongUsreTypes) {
+        res.writeHead(StatusCodeEnum.BAD_REQUEST, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ message: 'Invalid field types' }));
+        return;
+      }
+
+      const newUser = await UserModel.create(user);
+
+      res.writeHead(StatusCodeEnum.CREATED, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify(newUser));
+    });
   } catch (err) {
-    console.log(err);
+    res.writeHead(StatusCodeEnum.BAD_REQUEST, { 'Content-Type': 'application/json' });
+    res.end(JSON.stringify({ message: 'err' }));
   }
 };
 
