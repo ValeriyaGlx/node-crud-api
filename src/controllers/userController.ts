@@ -2,7 +2,7 @@ import { IncomingMessage, ServerResponse } from 'http';
 import * as UserModel from '../models/userModel';
 import { StatusCodeEnum } from '../types/enums';
 import { checkUserRequiredFields } from '../utils/checkUserRequiredFields';
-import { checkUserTypes } from '../utils';
+import { checkUserTypes, sanitazeBody } from '../utils';
 import { HEADER, MESSAGES } from '../constants';
 import { validate } from 'uuid';
 
@@ -37,6 +37,12 @@ const createUser = async (req: IncomingMessage, res: ServerResponse) => {
     });
 
     req.on('end', async () => {
+      if (!sanitazeBody(body)) {
+        res.writeHead(StatusCodeEnum.BAD_REQUEST, HEADER);
+        res.end(MESSAGES.INVALID_BODY);
+        return;
+      }
+
       const { username, age, hobbies } = JSON.parse(body);
 
       const user = {
@@ -92,6 +98,11 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, id: string)
     });
 
     req.on('end', async () => {
+      if (!sanitazeBody(body)) {
+        res.writeHead(StatusCodeEnum.BAD_REQUEST, HEADER);
+        res.end(MESSAGES.INVALID_BODY);
+        return;
+      }
       const { username, age, hobbies } = JSON.parse(body);
 
       const updatedUser = {

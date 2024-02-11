@@ -5,4 +5,5 @@ export const MESSAGES = {
   USER_NOT_FOUND: (id: string) => JSON.stringify({ message: `User with id ${id} not found` }),
   MISSED_FIELDS: (requiredFields: string) => JSON.stringify({ message: `Missing required fields: ${requiredFields}` }),
   OPERATION_NOT_FOUND: JSON.stringify({ message: 'This operation not found' }),
+  INVALID_BODY: JSON.stringify({ message: 'Invalid body format' }),
 };
