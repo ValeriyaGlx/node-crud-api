@@ -1,7 +1,5 @@
-import { v4 as uuidv4 } from 'uuid';
-
 import { usersData } from '../data/data';
-import { NewUserType, UserType } from '../types';
+import { UserType } from '../types';
 
 const findAllUsers = () => {
   return new Promise((resolve) => {
@@ -16,12 +14,9 @@ const findUserById = (id: string) => {
   });
 };
 
-const create = (user: NewUserType) => {
+const create = (user: UserType) => {
   return new Promise((resolve) => {
-    const newUser: UserType = {
-      id: uuidv4(),
-      ...user,
-    };
+    const newUser: UserType = user;
     usersData.push(newUser);
     resolve(newUser);
   });

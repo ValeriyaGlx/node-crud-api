@@ -5,6 +5,7 @@ import { checkUserRequiredFields } from '../utils/checkUserRequiredFields';
 import { checkUserTypes, sanitazeBody } from '../utils';
 import { HEADER, MESSAGES } from '../constants';
 import { validate } from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
 const getAllUsers = async () => {
   try {
@@ -16,7 +17,7 @@ const getAllUsers = async () => {
 };
 
 // @decs Get user by ID
-// @route POST /api/users/:id
+// @route GET /api/users/:id
 const getUserById = async (id: string) => {
   try {
     const user = await UserModel.findUserById(id);
@@ -46,6 +47,7 @@ const createUser = async (req: IncomingMessage, res: ServerResponse) => {
       const { username, age, hobbies } = JSON.parse(body);
 
       const user = {
+        id: uuidv4(),
         username,
         age,
         hobbies,
@@ -122,7 +124,7 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, id: string)
 
         const newUser = await UserModel.update(updatedUser);
         if (newUser) {
-          res.writeHead(StatusCodeEnum.CREATED, HEADER);
+          res.writeHead(StatusCodeEnum.OK, HEADER);
           res.end(JSON.stringify(newUser));
         } else {
           res.writeHead(StatusCodeEnum.NOT_FOUND, HEADER);
