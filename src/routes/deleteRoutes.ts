@@ -4,16 +4,17 @@ import { parseUrlPath } from '../utils';
 import * as UserController from '../controllers/userController';
 import { validate } from 'uuid';
 
-export const deleteRoutes = async (url: string): Promise<responseType> => {
+export const deleteRoutes = (url: string): responseType => {
   const parsedUrl = parseUrlPath(url);
   if (parsedUrl.startsWith(PATH_URL) && parsedUrl.split('/').length === 5) {
     const id = parsedUrl.split('/').at(3);
 
     if (id && validate(id)) {
-      const newData = await UserController.deleteUser(id);
+      const index = UserController.deleteUser(id);
+
       return {
-        status: newData ? StatusCodeEnum.NO_CONTENT : StatusCodeEnum.NOT_FOUND,
-        data: newData ? newData : MESSAGES.USER_NOT_FOUND(id),
+        status: index ? StatusCodeEnum.NO_CONTENT : StatusCodeEnum.NOT_FOUND,
+        data: index ? id : MESSAGES.USER_NOT_FOUND(id),
       };
     } else {
       return {

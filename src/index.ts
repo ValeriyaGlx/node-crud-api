@@ -3,6 +3,7 @@ import { createServer } from 'http';
 
 import { MethodsEnum, StatusCodeEnum } from './types/enums';
 import { deleteRoutes, getRoutes, postRoutes, putRoutes } from './routes';
+import { HEADER, MESSAGES } from './constants';
 
 const PORT = Number(process.env.PORT) || 4000;
 
@@ -12,7 +13,7 @@ const server = createServer(async (req, res) => {
       case MethodsEnum.GET:
         const get = async () => {
           const { status, data } = await getRoutes(req.url ?? '');
-          res.writeHead(status, { 'Content-Type': 'application/json' });
+          res.writeHead(status, HEADER);
           res.end(data);
         };
         get();
@@ -33,21 +34,21 @@ const server = createServer(async (req, res) => {
         break;
 
       case MethodsEnum.DELETE:
-        const deleteUser = async () => {
-          const { status, data } = await deleteRoutes(req?.url ?? '');
-          res.writeHead(status, { 'Content-Type': 'application/json' });
+        const deleteUser = () => {
+          const { status, data } = deleteRoutes(req?.url ?? '');
+          res.writeHead(status, HEADER);
           res.end(data);
         };
         deleteUser();
         break;
 
       default:
-        res.writeHead(StatusCodeEnum.NOT_FOUND, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: 'This operation not found' }));
+        res.writeHead(StatusCodeEnum.NOT_FOUND, HEADER);
+        res.end(MESSAGES.OPERATION_NOT_FOUND);
         break;
     }
   } catch (err) {
-    res.writeHead(StatusCodeEnum.INTERNAL_SERVER_ERROR, { 'Content-Type': 'application/json' });
+    res.writeHead(StatusCodeEnum.INTERNAL_SERVER_ERROR, HEADER);
     res.end(JSON.stringify({ message: 'Server fall' }));
   }
 });

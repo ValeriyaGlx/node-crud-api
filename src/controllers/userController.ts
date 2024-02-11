@@ -3,13 +3,13 @@ import * as UserModel from '../models/userModel';
 import { StatusCodeEnum } from '../types/enums';
 import { checkUserRequiredFields } from '../utils/checkUserRequiredFields';
 import { checkUserTypes } from '../utils';
-import { MESSAGES } from '../constants';
+import { HEADER, MESSAGES } from '../constants';
 import { validate } from 'uuid';
 
 const getAllUsers = async () => {
   try {
     const users = await UserModel.findAllUsers();
-    return JSON.stringify(users) ?? '';
+    return JSON.stringify(users) ?? '[ ]';
   } catch (err) {
     return;
   }
@@ -22,7 +22,7 @@ const getUserById = async (id: string) => {
     const user = await UserModel.findUserById(id);
     return JSON.stringify(user);
   } catch (err) {
-    return;
+    console.log(err);
   }
 };
 
@@ -48,34 +48,36 @@ const createUser = async (req: IncomingMessage, res: ServerResponse) => {
       const requiredFields = checkUserRequiredFields(user);
 
       if (requiredFields) {
-        res.writeHead(StatusCodeEnum.BAD_REQUEST, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: MESSAGES.MISSED_FIELDS(requiredFields) }));
+        res.writeHead(StatusCodeEnum.BAD_REQUEST, HEADER);
+        res.end(MESSAGES.MISSED_FIELDS(requiredFields));
         return;
       }
 
       const wrongUserTypes = checkUserTypes(user);
       if (wrongUserTypes) {
-        res.writeHead(StatusCodeEnum.BAD_REQUEST, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify({ message: MESSAGES.INVALID_TYPES }));
+        res.writeHead(StatusCodeEnum.BAD_REQUEST, HEADER);
+        res.end(MESSAGES.INVALID_TYPES);
         return;
       }
 
       const newUser = await UserModel.create(user);
 
-      res.writeHead(StatusCodeEnum.CREATED, { 'Content-Type': 'application/json' });
+      res.writeHead(StatusCodeEnum.CREATED, HEADER);
       res.end(JSON.stringify(newUser));
     });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 // @decs Delete user by ID
 // @route POST /api/users/:id
-const deleteUser = async (id: string) => {
-  const userJson = await getUserById(id);
-  if (userJson) {
-    const user = JSON.parse(userJson);
-    const newData = await UserModel.deleteUser(user);
-    return JSON.stringify(newData);
+const deleteUser = (id: string) => {
+  try {
+    const index = UserModel.deleteUser(id);
+    return index;
+  } catch (err) {
+    console.log(err);
   }
 };
 
@@ -99,24 +101,30 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, id: string)
         hobbies,
       };
 
-      if (validate(id)) {
+      if (id && validate(id)) {
         const wrongUserTypes = checkUserTypes(updatedUser);
         if (wrongUserTypes) {
-          res.writeHead(StatusCodeEnum.BAD_REQUEST, { 'Content-Type': 'application/json' });
-          res.end(JSON.stringify({ message: MESSAGES.INVALID_TYPES }));
+          res.writeHead(StatusCodeEnum.BAD_REQUEST, HEADER);
+          res.end(MESSAGES.INVALID_TYPES);
           return;
         }
 
         const newUser = await UserModel.update(updatedUser);
-
-        res.writeHead(StatusCodeEnum.CREATED, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(newUser));
+        if (newUser) {
+          res.writeHead(StatusCodeEnum.CREATED, HEADER);
+          res.end(JSON.stringify(newUser));
+        } else {
+          res.writeHead(StatusCodeEnum.NOT_FOUND, HEADER);
+          res.end(MESSAGES.USER_NOT_FOUND(id));
+        }
       } else {
-        res.writeHead(StatusCodeEnum.BAD_REQUEST, { 'Content-Type': 'application/json' });
-        res.end(JSON.stringify(MESSAGES.INVALID_UUID));
+        res.writeHead(StatusCodeEnum.BAD_REQUEST, HEADER);
+        res.end(MESSAGES.INVALID_UUID);
       }
     });
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+  }
 };
 
 export { getAllUsers, getUserById, createUser, updateUser, deleteUser };
