@@ -1,4 +1,4 @@
-# simple CRUD API
+# Simple CRUD API
 
 ## Description
 
@@ -11,20 +11,25 @@ Simple CRUD API using in-memory database underneath.
 `git clone git@github.com:ValeriyaGlx/node-crud-api.git`
 
 - Install the dependencies
+
 `npm install`
 
 - Setup .env variables. Use .env.example for it
 
 - Start the app in development mode
+
 `npm run start:dev`
 
 - Trigger build
+
 `npm run start:prod`
 
 - Start the app in multi mode
+
 `npm run start:multi`
 
 - Unit tests execution
+
 `npm run test`
 
 ## Implementation details
