@@ -39,13 +39,11 @@ describe('Scenario #1', () => {
   test('- update this user by id with wrong data types', async () => {
     const response = await request.put(`/api/users/${MOCK_ID}`).send(MOCK_UPDATE_WRONG_USER);
     expect(response.statusCode).toBe(StatusCodeEnum.BAD_REQUEST);
-    console.log(response.body);
     expect(response.body).toEqual(JSON.parse(MESSAGES.INVALID_TYPES));
   });
   test('- update this user by id with right data types', async () => {
     const response = await request.put(`/api/users/${MOCK_ID}`).send(MOCK_UPDATE_RIGHT_USER);
     expect(response.statusCode).toBe(StatusCodeEnum.OK);
-    console.log(response.body);
     expect(response.body).toEqual({ ...MOCK_UPDATE_RIGHT_USER, id: MOCK_ID });
   });
 });

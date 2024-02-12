@@ -23,7 +23,7 @@ const getUserById = async (id: string) => {
     const user = await UserModel.findUserById(id);
     return JSON.stringify(user);
   } catch (err) {
-    console.log(err);
+    return;
   }
 };
 
