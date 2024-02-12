@@ -1,5 +1,5 @@
 import supertest from 'supertest';
-import { NewUserType, StatusCodeEnum } from '../types';
+import { StatusCodeEnum } from '../types';
 import { createHttpServer } from '../server';
 import { MESSAGES } from '../constants';
 
@@ -14,7 +14,7 @@ const MOCK_UPDATE_USER = { username: 'Mock', age: 28, hobbies: ['have', 'fun'], 
 
 jest.mock('uuid', () => ({ v4: () => MOCK_ID, validate: () => true }));
 
-describe('Scenario #1', () => {
+describe('Scenario #2', () => {
   afterAll(() => server.close());
 
   test('- trying to add new user without required fields (age)', async () => {
