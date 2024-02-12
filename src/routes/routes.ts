@@ -5,14 +5,12 @@ import { deleteRoutes } from './deleteRoutes';
 import { getRoutes } from './getRoutes';
 import { postRoutes } from './postRoutes';
 import { putRoutes } from './putRoutes';
-import { usersData } from '../data/data';
 
 export const routes = (req: IncomingMessage, res: ServerResponse) => {
   switch (req.method) {
     case MethodsEnum.GET:
       const get = async () => {
         const { status, data } = await getRoutes(req.url ?? '');
-        console.log(usersData);
         res.writeHead(status, HEADER);
         res.end(data);
       };
