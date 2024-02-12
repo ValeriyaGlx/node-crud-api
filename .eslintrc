@@ -2,11 +2,12 @@
     "parser": "@typescript-eslint/parser",
     "plugins": ["@typescript-eslint/eslint-plugin"],
     "extends": [
+      "plugin:@typescript-eslint/eslint-recommended",
       "plugin:prettier/recommended",
       "prettier",
       "eslint:recommended"
     ],
-    "ignorePatterns": ["webpack.config.ts", "bundle"],
+    "ignorePatterns": ["webpack.config.ts", "bundle", "jest.config.js"],
     "parserOptions": {
       "ecmaVersion": 2022,
       "sourceType": "module"
@@ -24,6 +25,12 @@
       "no-multiple-empty-lines": "error",
       "prefer-const": "error",
       "no-undef": "off",
-      "no-case-declarations": "off"
+      "no-case-declarations": "off",
+      "no-unused-vars": [
+        "error",
+        {
+          "varsIgnorePattern": "^[A-Z]"
+        }
+      ]
     }
   }

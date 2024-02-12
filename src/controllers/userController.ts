@@ -2,10 +2,11 @@ import { IncomingMessage, ServerResponse } from 'http';
 import * as UserModel from '../models/userModel';
 import { StatusCodeEnum } from '../types/enums';
 import { checkUserRequiredFields } from '../utils/checkUserRequiredFields';
-import { checkUserTypes, sanitazeBody } from '../utils';
+import { checkUserTypes, sanitazeBody, updateUsersData } from '../utils';
 import { HEADER, MESSAGES } from '../constants';
 import { validate } from 'uuid';
 import { v4 as uuidv4 } from 'uuid';
+import { usersData } from '../data/data';
 
 const getAllUsers = async () => {
   try {
@@ -69,6 +70,7 @@ const createUser = async (req: IncomingMessage, res: ServerResponse) => {
       }
 
       const newUser = await UserModel.create(user);
+      updateUsersData(usersData);
 
       res.writeHead(StatusCodeEnum.CREATED, HEADER);
       res.end(JSON.stringify(newUser));
@@ -83,6 +85,7 @@ const createUser = async (req: IncomingMessage, res: ServerResponse) => {
 const deleteUser = (id: string) => {
   try {
     const index = UserModel.deleteUser(id);
+    updateUsersData(usersData);
     return index;
   } catch (err) {
     console.log(err);
@@ -124,6 +127,7 @@ const updateUser = async (req: IncomingMessage, res: ServerResponse, id: string)
 
         const newUser = await UserModel.update(updatedUser);
         if (newUser) {
+          updateUsersData(usersData);
           res.writeHead(StatusCodeEnum.OK, HEADER);
           res.end(JSON.stringify(newUser));
         } else {

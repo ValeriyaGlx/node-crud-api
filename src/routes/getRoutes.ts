@@ -1,8 +1,9 @@
-import { StatusCodeEnum, responseType } from '../types';
+import { responseType } from '../types';
 import * as UserController from '../controllers/userController';
 import { parseUrlPath } from '../utils';
 import { validate } from 'uuid';
 import { MESSAGES, PATH_URL } from '../constants';
+import { StatusCodeEnum } from '../types/enums';
 
 export const getRoutes = async (url: string): Promise<responseType> => {
   const parsedUrl = parseUrlPath(url);

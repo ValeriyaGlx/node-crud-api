@@ -9,6 +9,7 @@
   "scripts": {
     "start:prod": "webpack --config ./webpack.config.ts && node ./bundle/bundle.js",
     "start:dev": "nodemon",
+    "start:multi": "nodemon -- --isMulti=true",
     "lint": "eslint . --ext ts --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint --fix --ext ts && npm run format:fix",
     "format": "prettier \"./**/*.{ts,css}\"",
